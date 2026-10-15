@@ -1,6 +1,7 @@
 // client.dll: keyboard and mouse while minecraft has them. source still gets a short allow-list:
 // the console, its pause menu (esc, when no minecraft screen is open), quicksave/quickload, and two
-// keys of its own: G uses things (doors, buttons, chargers) and V toggles the suit flashlight.
+// keys of its own outside minecraft's screens: G uses things (doors, buttons, chargers), and V runs
+// its source binding or toggles the suit flashlight when unbound.
 
 #include "cbase.h"
 #include "in_buttons.h"
@@ -156,6 +157,7 @@ namespace halfcraft
 		}
 
 		bool g_shift_down = false;
+		int  g_control_down = 0;
 		int  g_source_buttons = 0;  // mouse buttons (sdl numbers as bits) whose press went to source: their release does too
 		int  g_hand_buttons = 0;    // mouse buttons whose press went to minecraft's hands during a ride: their release does too
 
@@ -204,6 +206,7 @@ namespace halfcraft
 		g_source_buttons = 0;
 		g_hand_buttons = 0;
 		g_shift_down = false;
+		g_control_down = 0;
 		session.link.push_input(proto::kInReleaseAll, 0);
 	}
 
@@ -220,7 +223,10 @@ namespace halfcraft
 			s.use_held = pressed;
 			return false;
 		}
-		if (code == KEY_V) {
+		if (code == KEY_V && !s.mc_screen_open) {
+			if (binding && binding[0]) {
+				return true;
+			}
 			if (pressed) {
 				engine->ClientCmd_Unrestricted("impulse 100");
 			}
@@ -254,12 +260,17 @@ namespace halfcraft
 		if (code == KEY_LSHIFT || code == KEY_RSHIFT) {
 			g_shift_down = pressed;
 		}
+		if (code == KEY_LCONTROL || code == KEY_RCONTROL) {
+			const int bit = code == KEY_LCONTROL ? 1 : 2;
+			g_control_down = pressed ? (g_control_down | bit) : (g_control_down & ~bit);
+		}
 		if (code == KEY_W) {
 			s.forward_held = pressed;  // still minecraft's; source only watches it for ladders
 		}
 		if (const int scancode = sdl_scancode(code)) {
 			s.link.push_input(proto::kInKey, static_cast<std::uint16_t>(scancode), pressed ? 1 : 0);
-			if (pressed && s.mc_screen_open) {
+			// shortcuts already reach minecraft as key events; typing their letters would alter the field too.
+			if (pressed && s.mc_screen_open && g_control_down == 0) {
 				if (const int ch = typed_char(code, g_shift_down)) {
 					s.link.push_input(proto::kInText, 0, ch);
 				}

@@ -237,6 +237,7 @@ namespace halfcraft
 			if (screen_open && !s.mc_screen_open) {
 				s.cursor_x = s.viewport_w / 2;
 				s.cursor_y = s.viewport_h / 2;
+				s.link.push_input(proto::kInCursor, 0, s.cursor_x / s.overlay_divisor, s.cursor_y / s.overlay_divisor);
 			}
 			s.mc_screen_open = screen_open;
 			if (s.have_mc && s.mc.sensitivity > 0.0f) {

@@ -36,6 +36,46 @@ namespace
 {
 	constexpr int TILE = 256;  // pixels; a power of two, as vgui textures are
 
+	void draw_cursor(int x, int y, int scale)
+	{
+		// the system cursor belongs to minecraft's hidden window, so it isn't in the exported frame.
+		static constexpr const char* ROWS[] = {
+			"#",
+			"##",
+			"#.#",
+			"#..#",
+			"#...#",
+			"#....#",
+			"#.....#",
+			"#......#",
+			"#.......#",
+			"#........#",
+			"#.....#####",
+			"#..#..#",
+			"#.# #..#",
+			"##  #..#",
+			"#    #..#",
+			"     #..#",
+			"      ##",
+		};
+		for (const char* row : ROWS) {
+			int column = 0;
+			while (row[column]) {
+				const int  start = column;
+				const char color = row[column];
+				while (row[column] == color) {
+					++column;
+				}
+				if (color != ' ') {
+					const int shade = color == '#' ? 0 : 255;
+					vgui::surface()->DrawSetColor(shade, shade, shade, 255);
+					vgui::surface()->DrawFilledRect(x + start * scale, y, x + column * scale, y + scale);
+				}
+			}
+			y += scale;
+		}
+	}
+
 	/// 255 * 256 / alpha, for un-premultiplying with a multiply and a shift.
 	const std::array<std::uint32_t, 256>& unpremultiply_table()
 	{
@@ -302,6 +342,9 @@ void CHudHalfCraftOverlay::Paint(void)
 	int nWide, nTall;
 	GetSize(nWide, nTall);
 	m_Tiles.draw(nWide);
+	if (session.mc_screen_open && session.minecraft_owns_input) {
+		draw_cursor(session.cursor_x, session.cursor_y, std::max(1, (nTall + 360) / 720));
+	}
 }
 
 CON_COMMAND(hc_perf, "halfcraft: the frame rate and what minecraft's overlay costs, over the last 300 frames")
