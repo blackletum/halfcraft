@@ -40,7 +40,8 @@ namespace halfcraft
 		LRESULT CALLBACK message_hook(int code, WPARAM removed, LPARAM message)
 		{
 			if (code == HC_ACTION && removed == PM_REMOVE) {
-				const auto* msg = reinterpret_cast<const MSG*>(message);
+				// a WH_GETMESSAGE hook gets its MSG's address as an LPARAM: windows' own contract
+				const auto* msg = reinterpret_cast<const MSG*>(message);  // NOLINT(performance-no-int-to-ptr)
 				if (msg->message == WM_CHAR) {
 					typed(static_cast<wchar_t>(msg->wParam));
 				}
