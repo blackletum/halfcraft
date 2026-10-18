@@ -9,7 +9,7 @@ namespace halfcraft::proto
 {
 	// a hash of the layout below but its comments: the host writes it into the header, and Minecraft links only
 	// with a host built from the same schema
-	inline constexpr std::uint32_t kLayout = 0x2F2E654F;
+	inline constexpr std::uint32_t kLayout = 0xC9F9570D;
 
 	// ---- where each part of the mapping is ----------------------------------------------------------
 	inline constexpr std::uint64_t kOffHeader = 0x00;
@@ -124,6 +124,7 @@ namespace halfcraft::proto
 		kMcSwimming = 1u << 6,
 		kMcFlying = 1u << 7,
 		kMcSleeping = 1u << 8,    // in a bed: yaw/pitch are the look Minecraft holds there, eyeX/Y/Z its camera
+		kMcSubtitles = 1u << 9,   // Minecraft's Show Subtitles option: the host's close captions go to Minecraft (kStrCaption)
 		// bits 12-13: kept for the puppet group (A), 14-15 for the world group (C)
 	};
 
@@ -304,6 +305,10 @@ namespace halfcraft::proto
 		// (#26) something the host's player picked up, for Minecraft to show as a toast: "weapon <WeaponId>",
 		// "ammo <host ammo type> <count>" or "item <host classname>"
 		kStrPickup = 4,
+		// (#26) one of the host's close captions, while Minecraft shows them (kMcSubtitles): "<from player 0|1>
+		// <speaker> <caption>", the speaker as "<host classname>/<model name>" ("-" for none), the caption
+		// localized with the host's markup (<clr:r,g,b>, <I>, <sfx>, <delay:s>, ...)
+		kStrCaption = 5,
 		// 6: kept for the puppet group (A), 8 for the world group (C)
 	};
 

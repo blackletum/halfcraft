@@ -324,6 +324,30 @@ index 8021c49..e27d4a3 100644
  	{
  		pKV->deleteThis();
  
+diff --git a/sp/src/game/client/hud_closecaption.cpp b/sp/src/game/client/hud_closecaption.cpp
+index f72b9fc..da9e28f 100644
+--- a/sp/src/game/client/hud_closecaption.cpp
++++ b/sp/src/game/client/hud_closecaption.cpp
+@@ -23,6 +23,8 @@
+ #include "datacache/idatacache.h"
+ #include "SoundEmitterSystem/isoundemittersystembase.h"
+ 
++#include "shared/hc_hooks.h"
++
+ // memdbgon must be the last include file in a .cpp file!!!
+ #include "tier0/memdbgon.h"
+ 
+@@ -1476,6 +1478,10 @@ void CHudCloseCaption::Process( const wchar_t *stream, float duration, const cha
+ 		}
+ 	}
+ 
++	// halfcraft: minecraft shows it in its chat or its subtitles instead, while its hud is up
++	if ( valid && halfcraft::client_caption( stream, tokenstream, fromplayer ) )
++		return;
++
+ 	float lifespan = duration + cc_linger_time.GetFloat();
+ 	
+ 	float addedlife = 0.0f;
 diff --git a/sp/src/game/client/hud_hintdisplay.cpp b/sp/src/game/client/hud_hintdisplay.cpp
 index 487633b..40ca556 100644
 --- a/sp/src/game/client/hud_hintdisplay.cpp
@@ -793,6 +817,29 @@ index b607bba..8a21a57 100644
  		player->ApplyAbsVelocityImpulse( (1.0 + ( frametime * 0.5 )) * player->GetBaseVelocity() );
  		player->SetBaseVelocity( vec3_origin );
  	}
+diff --git a/sp/src/game/server/sceneentity.cpp b/sp/src/game/server/sceneentity.cpp
+index 495aa00..b23f7dd 100644
+--- a/sp/src/game/server/sceneentity.cpp
++++ b/sp/src/game/server/sceneentity.cpp
+@@ -38,6 +38,8 @@
+ #include "npc_alyx_episodic.h"
+ #endif // HL2_EPISODIC
+ 
++#include "shared/hc_hooks.h"
++
+ // memdbgon must be the last include file in a .cpp file!!!
+ #include "tier0/memdbgon.h"
+ 
+@@ -1851,6 +1853,9 @@ void CSceneEntity::DispatchStartSpeak( CChoreoScene *scene, CBaseFlex *actor, CC
+ 						byteflags |= CLOSE_CAPTION_GENDER_FEMALE;
+ 					}
+ 
++					// halfcraft: the client's caption doesn't say who speaks it; minecraft's chat names them
++					halfcraft::server_caption_speaker( lowercase, actor );
++
+ 					// Send caption and duration hint down to client
+ 					UserMessageBegin( filter, "CloseCaption" );
+ 						WRITE_STRING( lowercase );
 diff --git a/sp/src/game/server/server_episodic.vpc b/sp/src/game/server/server_episodic.vpc
 index 81c9297..405a59e 100644
 --- a/sp/src/game/server/server_episodic.vpc
@@ -819,6 +866,29 @@ index 0fc2e64..f288574 100644
  
  $Configuration
  {
+diff --git a/sp/src/game/shared/SoundEmitterSystem.cpp b/sp/src/game/shared/SoundEmitterSystem.cpp
+index 6d27fde..8680f68 100644
+--- a/sp/src/game/shared/SoundEmitterSystem.cpp
++++ b/sp/src/game/shared/SoundEmitterSystem.cpp
+@@ -34,6 +34,8 @@
+ #define CRecipientFilter C_RecipientFilter
+ #endif
+ 
++#include "shared/hc_hooks.h"
++
+ // memdbgon must be the last include file in a .cpp file!!!
+ #include "tier0/memdbgon.h"
+ 
+@@ -727,6 +729,9 @@ public:
+ 				}
+ 			}
+ 
++			// halfcraft: the client's caption doesn't say who speaks it; minecraft's chat names them
++			halfcraft::server_caption_speaker( lowercase, pActor );
++
+ 			// Send caption and duration hint down to client
+ 			UserMessageBegin( filterCopy, "CloseCaption" );
+ 				WRITE_STRING( lowercase );
 diff --git a/sp/src/game/shared/achievement_saverestore.cpp b/sp/src/game/shared/achievement_saverestore.cpp
 index b9de1e2..48b5303 100644
 --- a/sp/src/game/shared/achievement_saverestore.cpp

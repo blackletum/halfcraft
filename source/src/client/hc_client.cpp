@@ -245,6 +245,7 @@ namespace halfcraft
 			if (s.have_mc && s.mc.sensitivity > 0.0f) {
 				s.sensitivity = s.mc.sensitivity;
 			}
+			captions_follow_minecraft(s);
 
 			// ---- source ----------------------------------------------------------------------
 			C_BasePlayer* player = C_BasePlayer::GetLocalPlayer();

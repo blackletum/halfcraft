@@ -105,6 +105,10 @@ namespace halfcraft
 	/// key/mouse bookkeeping when input moves between the games (hc_input.cpp).
 	void input_release_all(ClientSession& session);
 
+	/// every frame: minecraft's show subtitles option turns source's close captions on or off when it
+	/// changes (hc_captions.cpp).
+	void captions_follow_minecraft(const ClientSession& session);
+
 	/// every frame: what the player typed goes to minecraft's open screen as characters, in their
 	/// keyboard layout (hc_input.cpp).
 	void input_send_text(ClientSession& session);

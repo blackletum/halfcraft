@@ -109,6 +109,10 @@ is a key Minecraft names from its own binding of that host command (%+jump%, %+a
 kStrPickup = { value = 4, doc = """
 (#26) something the host's player picked up, for Minecraft to show as a toast: "weapon <WeaponId>",
 "ammo <host ammo type> <count>" or "item <host classname>"""" }
+kStrCaption = { value = 5, doc = """
+(#26) one of the host's close captions, while Minecraft shows them (kMcSubtitles): "<from player 0|1>
+<speaker> <caption>", the speaker as "<host classname>/<model name>" ("-" for none), the caption
+localized with the host's markup (<clr:r,g,b>, <I>, <sfx>, <delay:s>, ...)""" }
 
 [enums.HealKind]
 type = "u16"

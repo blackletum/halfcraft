@@ -19,6 +19,7 @@
 //            refused (the player movement, hc_movement.cpp); the client sends minecraft's player there
 //   new games - the menu's chapter cfgs run the client's hc_new_game before their map; the server
 //            asks as the map loads, which tells a new game from a `map` typed into the console
+//   speakers - who says a close caption (the server knows); minecraft's chat names them
 
 #include <cstdint>
 
@@ -119,4 +120,12 @@ namespace halfcraft
 	using TakeNewGameFn = int (*)();
 
 	inline constexpr char HC_TAKE_NEW_GAME_EXPORT[] = "HalfCraft_TakeNewGame";
+
+	/// server.dll -> client.dll: who says a close caption the server sends (a sound's or a scene's).
+	/// the caption that reaches the client has only its token; minecraft's chat names the speaker.
+	/// @param token - the caption's token, lower case
+	/// @param speaker - "<classname>/<model file name, no folder or extension>", lower case
+	using CaptionSpeakerFn = void (*)(const char* token, const char* speaker);
+
+	inline constexpr char HC_CAPTION_SPEAKER_EXPORT[] = "HalfCraft_CaptionSpeaker";
 }
