@@ -69,12 +69,14 @@ $Project
 				$File	"$HALFCRAFTDIR\src\core\hc_log.h"
 				$File	"$HALFCRAFTDIR\src\core\hc_prism.h"
 				$File	"$HALFCRAFTDIR\src\core\hc_text.h"
+				$File	"$HALFCRAFTDIR\src\core\hc_text_input.h"
 				$File	"$HALFCRAFTDIR\src\core\hc_ticks.h"
 				$File	"$HALFCRAFTDIR\src\core\hc_units.h"
 				$File	"$HALFCRAFTDIR\src\core\hc_chapters.h"
 				$File	"$HALFCRAFTDIR\src\core\hc_link.cpp" \
 						"$HALFCRAFTDIR\src\core\hc_log.cpp" \
 						"$HALFCRAFTDIR\src\core\hc_prism.cpp" \
+						"$HALFCRAFTDIR\src\core\hc_text_input.cpp" \
 						"$HALFCRAFTDIR\src\core\hc_ticks.cpp" \
 						"$HALFCRAFTDIR\src\core\hc_units.cpp"
 				{

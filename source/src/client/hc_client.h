@@ -100,6 +100,10 @@ namespace halfcraft
 	/// key/mouse bookkeeping when input moves between the games (hc_input.cpp).
 	void input_release_all(ClientSession& session);
 
+	/// every frame: what the player typed goes to minecraft's open screen as characters, in their
+	/// keyboard layout (hc_input.cpp).
+	void input_send_text(ClientSession& session);
+
 	/// how much smaller than the viewport minecraft draws its overlay (hc_overlay.cpp, hc_overlay_scale).
 	int overlay_divisor_for(int viewport_w, int viewport_h);
 }

@@ -24,6 +24,7 @@
 #include "client/hc_things.h"
 #include "client/hc_weapons.h"
 #include "core/hc_log.h"
+#include "core/hc_text_input.h"
 #include "shared/hc_hooks.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -181,6 +182,7 @@ namespace halfcraft
 			void Shutdown() override
 			{
 				blocks_shutdown();
+				text_input_detach();
 				auto& s = client_session();
 				if (s.link_ready) {
 					s.link.write_host_state(proto::HostState{});
@@ -389,6 +391,7 @@ namespace halfcraft
 				}
 			}
 			s.minecraft_owns_input = owns_input;
+			input_send_text(s);
 
 			if (s.have_mc) {
 				s.pose = s.ticks.sample(s.mc, qpc_now());
