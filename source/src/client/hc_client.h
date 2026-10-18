@@ -7,6 +7,8 @@
 #include <mutex>
 #include <vector>
 
+#include "inputsystem/ButtonCode.h"
+
 #include "core/hc_link.h"
 #include "core/hc_ticks.h"
 #include "core/hc_units.h"
@@ -96,6 +98,9 @@ namespace halfcraft
 	};
 
 	ClientSession& client_session();
+
+	/// a source key's SDL scancode (usb hid usage, what minecraft 26.x reads); 0 for none (hc_input.cpp).
+	int sdl_scancode(ButtonCode_t code);
 
 	/// key/mouse bookkeeping when input moves between the games (hc_input.cpp).
 	void input_release_all(ClientSession& session);

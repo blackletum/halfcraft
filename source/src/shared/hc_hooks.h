@@ -5,9 +5,11 @@
 
 #include "inputsystem/ButtonCode.h"
 
+class C_BaseCombatWeapon;
 class CBaseCombatWeapon;
 class CBaseEntity;
 class CBasePlayer;
+class CHudTexture;
 class CTakeDamageInfo;
 class CUserCmd;
 class CViewSetup;
@@ -88,6 +90,24 @@ namespace halfcraft
 	/// CHudCredits::PrepareCredits: the search path id of the campaign being played, to read its
 	/// scripts/credits.txt from.
 	const char* client_campaign_path_id();
+
+	/// CHudHintKeyDisplay::SetHintText: the key hint half-life shows next, localized, with its
+	/// %command% placeholders (hc_hints.cpp).
+	void client_key_hint_text(const wchar_t* text);
+
+	/// CHudHintKeyDisplay::ShouldDraw: minecraft shows the key hint as a toast while its hud is up.
+	/// @param shown - source would draw it (it hasn't faded out)
+	/// @return whether source draws it itself
+	bool client_key_hint_drawn(bool shown);
+
+	/// CHudHistoryResource::AddIconToHistory: half-life's pickup history (a weapon, ammo, a health kit)
+	/// goes to minecraft as toasts while its hud is up (hc_pickups.cpp).
+	/// @param type - HISTSLOT_*
+	/// @param id - the ammo type, for ammo
+	/// @param weapon - the weapon, for one
+	/// @param icon - the item's icon, for an item
+	/// @return true when minecraft took it: source keeps it out of its own history
+	bool client_pickup(int type, int id, C_BaseCombatWeapon* weapon, int count, CHudTexture* icon);
 
 	/// ClientModeShared::PostRenderVGui: the frame is finished (the world, the hud and minecraft's
 	/// overlay); only source's menus and console still go over it.

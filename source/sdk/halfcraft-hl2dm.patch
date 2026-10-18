@@ -1,5 +1,5 @@
 diff --git a/src/game/client/cdll_client_int.cpp b/src/game/client/cdll_client_int.cpp
-index 41f2d0e0..57ed651b 100644
+index 41f2d0e..57ed651 100644
 --- a/src/game/client/cdll_client_int.cpp
 +++ b/src/game/client/cdll_client_int.cpp
 @@ -175,6 +175,8 @@ extern vgui::IInputInternal *g_InputInternal;
@@ -23,7 +23,7 @@ index 41f2d0e0..57ed651b 100644
  	if ( !g_pEngineReplay || !g_pEngineReplay->IsSupportedModAndPlatform() )
  		return false;
 diff --git a/src/game/client/cdll_util.cpp b/src/game/client/cdll_util.cpp
-index c003acd4..5d289fe8 100644
+index c003acd..5d289fe 100644
 --- a/src/game/client/cdll_util.cpp
 +++ b/src/game/client/cdll_util.cpp
 @@ -29,6 +29,8 @@
@@ -46,7 +46,7 @@ index c003acd4..5d289fe8 100644
  }
  
 diff --git a/src/game/client/client_episodic.vpc b/src/game/client/client_episodic.vpc
-index d0db976b..24c01c64 100644
+index d0db976..24c01c6 100644
 --- a/src/game/client/client_episodic.vpc
 +++ b/src/game/client/client_episodic.vpc
 @@ -9,6 +9,8 @@ $Macro GAMENAME 	"episodic" [!$SOURCESDK]
@@ -59,7 +59,7 @@ index d0db976b..24c01c64 100644
  $Configuration
  {
 diff --git a/src/game/client/client_hl2.vpc b/src/game/client/client_hl2.vpc
-index d9cfcd3f..e0e2dfc0 100644
+index d9cfcd3..e0e2dfc 100644
 --- a/src/game/client/client_hl2.vpc
 +++ b/src/game/client/client_hl2.vpc
 @@ -10,6 +10,8 @@ $Macro GAMENAME 	"mod_hl2" [$SOURCESDK]
@@ -72,7 +72,7 @@ index d9cfcd3f..e0e2dfc0 100644
  $Configuration
  {
 diff --git a/src/game/client/clientmode_shared.cpp b/src/game/client/clientmode_shared.cpp
-index 54933d24..e6d59e7a 100644
+index 54933d2..e6d59e7 100644
 --- a/src/game/client/clientmode_shared.cpp
 +++ b/src/game/client/clientmode_shared.cpp
 @@ -67,6 +67,8 @@ extern ConVar replay_rendersetting_renderglow;
@@ -128,7 +128,7 @@ index 54933d24..e6d59e7a 100644
  	// Should we start typing a message?
  	if ( pszCurrentBinding &&
 diff --git a/src/game/client/clientshadowmgr.cpp b/src/game/client/clientshadowmgr.cpp
-index 8daa9f65..a005ffb5 100644
+index 8daa9f6..a005ffb 100644
 --- a/src/game/client/clientshadowmgr.cpp
 +++ b/src/game/client/clientshadowmgr.cpp
 @@ -83,6 +83,8 @@
@@ -168,8 +168,32 @@ index 8daa9f65..a005ffb5 100644
  		view->UpdateShadowDepthTexture( m_DummyColorTexture, shadowDepthTexture, shadowView );
  
  		// Associate the shadow depth texture and stencil bit with the flashlight for use during scene rendering
+diff --git a/src/game/client/history_resource.cpp b/src/game/client/history_resource.cpp
+index c0743b4..69148bf 100644
+--- a/src/game/client/history_resource.cpp
++++ b/src/game/client/history_resource.cpp
+@@ -13,6 +13,8 @@
+ #include "iclientmode.h"
+ #include "vgui_controls/AnimationController.h"
+ 
++#include "shared/hc_hooks.h"
++
+ // memdbgon must be the last include file in a .cpp file!!!
+ #include "tier0/memdbgon.h"
+ 
+@@ -165,6 +167,10 @@ void CHudHistoryResource::AddToHistory( int iType, const char *szName, int iCoun
+ //-----------------------------------------------------------------------------
+ void CHudHistoryResource::AddIconToHistory( int iType, int iId, C_BaseCombatWeapon *weapon, int iCount, CHudTexture *icon )
+ {
++	// halfcraft: minecraft shows it as a toast instead, while its hud is up
++	if ( halfcraft::client_pickup( iType, iId, weapon, iCount, icon ) )
++		return;
++
+ 	m_bNeedsDraw = true;
+ 
+ 	// Check to see if the pic would have to be drawn too high. If so, start again from the bottom
 diff --git a/src/game/client/hl2/hud_credits.cpp b/src/game/client/hl2/hud_credits.cpp
-index 6ad1488b..139908a1 100644
+index 6ad1488..139908a 100644
 --- a/src/game/client/hl2/hud_credits.cpp
 +++ b/src/game/client/hl2/hud_credits.cpp
 @@ -18,6 +18,8 @@
@@ -192,8 +216,39 @@ index 6ad1488b..139908a1 100644
  	{
  		pKV->deleteThis();
  
+diff --git a/src/game/client/hud_hintdisplay.cpp b/src/game/client/hud_hintdisplay.cpp
+index 040ce5b..37e0ca6 100644
+--- a/src/game/client/hud_hintdisplay.cpp
++++ b/src/game/client/hud_hintdisplay.cpp
+@@ -18,6 +18,8 @@
+ #include "IGameUIFuncs.h"
+ #include "inputsystem/iinputsystem.h"
+ 
++#include "shared/hc_hooks.h"
++
+ // memdbgon must be the last include file in a .cpp file!!!
+ #include "tier0/memdbgon.h"
+ 
+@@ -423,7 +425,8 @@ void CHudHintKeyDisplay::ApplySchemeSettings( vgui::IScheme *pScheme )
+ //-----------------------------------------------------------------------------
+ bool CHudHintKeyDisplay::ShouldDraw( void )
+ {
+-	return ( ( GetAlpha() > 0 ) && CHudElement::ShouldDraw() );
++	// halfcraft: minecraft shows it as a toast instead, while its hud is up
++	return halfcraft::client_key_hint_drawn( ( GetAlpha() > 0 ) && CHudElement::ShouldDraw() );
+ }
+ 
+ //-----------------------------------------------------------------------------
+@@ -479,6 +482,7 @@ bool CHudHintKeyDisplay::SetHintText( const char *text )
+ 		g_pVGuiLocalize->ConvertANSIToUnicode(text, wszBuf, sizeof(wszBuf));
+ 		ws = wszBuf;
+ 	}
++	halfcraft::client_key_hint_text( ws );
+ 
+ 	// parse out the text into a label set
+ 	while ( *ws )
 diff --git a/src/game/client/in_mouse.cpp b/src/game/client/in_mouse.cpp
-index 8d503c26..2d47245a 100644
+index 8d503c2..2d47245 100644
 --- a/src/game/client/in_mouse.cpp
 +++ b/src/game/client/in_mouse.cpp
 @@ -34,6 +34,8 @@
@@ -221,7 +276,7 @@ index 8d503c26..2d47245a 100644
  		GetMouseDelta( mx, my, &mouse_x, &mouse_y );
  
 diff --git a/src/game/client/view.cpp b/src/game/client/view.cpp
-index de0c0b07..bae40167 100644
+index de0c0b0..bae4016 100644
 --- a/src/game/client/view.cpp
 +++ b/src/game/client/view.cpp
 @@ -45,6 +45,7 @@
@@ -247,7 +302,7 @@ index de0c0b07..bae40167 100644
  	{
  		// Let the headtracking read the status of the HMD, etc.
 diff --git a/src/game/client/viewrender.cpp b/src/game/client/viewrender.cpp
-index b4011e28..cbc45f2c 100644
+index b4011e2..cbc45f2 100644
 --- a/src/game/client/viewrender.cpp
 +++ b/src/game/client/viewrender.cpp
 @@ -80,6 +80,8 @@
@@ -315,7 +370,7 @@ index b4011e28..cbc45f2c 100644
  	m_DrawFlags = 0;
  
 diff --git a/src/game/server/EnvMessage.cpp b/src/game/server/EnvMessage.cpp
-index a22dfc11..e8c2e539 100644
+index a22dfc1..e8c2e53 100644
 --- a/src/game/server/EnvMessage.cpp
 +++ b/src/game/server/EnvMessage.cpp
 @@ -217,7 +217,12 @@ void CCredits::OnRestore()
@@ -333,7 +388,7 @@ index a22dfc11..e8c2e539 100644
  	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
  
 diff --git a/src/game/server/baseanimating.cpp b/src/game/server/baseanimating.cpp
-index fb59bca9..bc4ff2e8 100644
+index fb59bca..bc4ff2e 100644
 --- a/src/game/server/baseanimating.cpp
 +++ b/src/game/server/baseanimating.cpp
 @@ -2751,6 +2751,10 @@ CBoneCache *CBaseAnimating::GetBoneCache( void )
@@ -348,7 +403,7 @@ index fb59bca9..bc4ff2e8 100644
  	CBoneCache *pcache = Studio_GetBoneCache( m_boneCacheHandle );
  	int boneMask = BONE_USED_BY_HITBOX | BONE_USED_BY_ATTACHMENT;
 diff --git a/src/game/server/hl2/hl2_player.cpp b/src/game/server/hl2/hl2_player.cpp
-index 7b2d595e..cbafb503 100644
+index 7b2d595..cbafb50 100644
 --- a/src/game/server/hl2/hl2_player.cpp
 +++ b/src/game/server/hl2/hl2_player.cpp
 @@ -55,6 +55,8 @@
@@ -371,7 +426,7 @@ index 7b2d595e..cbafb503 100644
  			SwitchToNextBestWeapon(GetActiveWeapon());
  		}
 diff --git a/src/game/server/player.cpp b/src/game/server/player.cpp
-index 2c0fa74f..fda33a29 100644
+index 2c0fa74..fda33a2 100644
 --- a/src/game/server/player.cpp
 +++ b/src/game/server/player.cpp
 @@ -102,6 +102,8 @@ ConVar sv_chat_seconds_per_msg_tier2( "sv_chat_seconds_per_msg_tier2", "10", FCV
@@ -438,7 +493,7 @@ index 2c0fa74f..fda33a29 100644
  				}
  			}
 diff --git a/src/game/server/player_command.cpp b/src/game/server/player_command.cpp
-index a8469d6f..794ad271 100644
+index a8469d6..794ad27 100644
 --- a/src/game/server/player_command.cpp
 +++ b/src/game/server/player_command.cpp
 @@ -14,6 +14,7 @@
@@ -459,7 +514,7 @@ index a8469d6f..794ad271 100644
  		player->SetBaseVelocity( vec3_origin );
  	}
 diff --git a/src/game/server/server_episodic.vpc b/src/game/server/server_episodic.vpc
-index 0234b27f..89f64293 100644
+index 0234b27..89f6429 100644
 --- a/src/game/server/server_episodic.vpc
 +++ b/src/game/server/server_episodic.vpc
 @@ -9,6 +9,8 @@ $Macro GAMENAME 	"episodic" [!$SOURCESDK]
@@ -472,7 +527,7 @@ index 0234b27f..89f64293 100644
  $Configuration
  {
 diff --git a/src/game/server/server_hl2.vpc b/src/game/server/server_hl2.vpc
-index 0fc2e64b..78139395 100644
+index 0fc2e64..7813939 100644
 --- a/src/game/server/server_hl2.vpc
 +++ b/src/game/server/server_hl2.vpc
 @@ -9,6 +9,8 @@ $Macro GAMENAME 	"hl2" [!$SOURCESDK]
@@ -485,7 +540,7 @@ index 0fc2e64b..78139395 100644
  $Configuration
  {
 diff --git a/src/game/shared/baseentity_shared.cpp b/src/game/shared/baseentity_shared.cpp
-index bf44dc19..84cf3376 100644
+index bf44dc1..84cf337 100644
 --- a/src/game/shared/baseentity_shared.cpp
 +++ b/src/game/shared/baseentity_shared.cpp
 @@ -19,6 +19,7 @@
@@ -509,7 +564,7 @@ index bf44dc19..84cf3376 100644
  	{
  		Vector vecImpulse = inVecImpulse;
 diff --git a/src/game/shared/gamemovement.cpp b/src/game/shared/gamemovement.cpp
-index 4b79f72c..5ad95652 100644
+index 4b79f72..5ad9565 100644
 --- a/src/game/shared/gamemovement.cpp
 +++ b/src/game/shared/gamemovement.cpp
 @@ -4583,6 +4583,10 @@ void CGameMovement::PlayerMove( void )
@@ -524,7 +579,7 @@ index 4b79f72c..5ad95652 100644
  	if ( player->GetMoveType() != MOVETYPE_NOCLIP && 
  		 player->GetMoveType() != MOVETYPE_NONE && 		 
 diff --git a/src/game/shared/gamemovement.h b/src/game/shared/gamemovement.h
-index 8c9b7d9a..262b7988 100644
+index 8c9b7d9..262b798 100644
 --- a/src/game/shared/gamemovement.h
 +++ b/src/game/shared/gamemovement.h
 @@ -202,6 +202,9 @@ protected:
@@ -538,7 +593,7 @@ index 8c9b7d9a..262b7988 100644
  
  	virtual	void	ReduceTimers( void );
 diff --git a/src/game/shared/gamerules.cpp b/src/game/shared/gamerules.cpp
-index 069dc162..a7cf5161 100644
+index 069dc16..a7cf516 100644
 --- a/src/game/shared/gamerules.cpp
 +++ b/src/game/shared/gamerules.cpp
 @@ -11,6 +11,7 @@
@@ -560,7 +615,7 @@ index 069dc162..a7cf5161 100644
  	CBaseEntity *pEntity = NULL;
  	trace_t		tr;
 diff --git a/src/game/shared/hl2/hl2_gamerules.cpp b/src/game/shared/hl2/hl2_gamerules.cpp
-index f301bbf3..7c4d784e 100644
+index f301bbf..7c4d784 100644
 --- a/src/game/shared/hl2/hl2_gamerules.cpp
 +++ b/src/game/shared/hl2/hl2_gamerules.cpp
 @@ -181,6 +181,16 @@ ConVar	sk_max_gauss_round		( "sk_max_gauss_round", "0", FCVAR_REPLICATED );
@@ -594,7 +649,7 @@ index f301bbf3..7c4d784e 100644
  		def.AddAmmoType("StriderMinigunDirect",	DMG_BULLET,				TRACER_LINE,			2, 2, 15, 1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED ); // hit like a 1.0kg weight at 750 ft/s
  		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_IMPULSE(400, 1225), AMMO_FORCE_DROP_IF_CARRIED | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER );
 diff --git a/src/game/shared/usercmd.cpp b/src/game/shared/usercmd.cpp
-index 84ffa243..0e0d20f4 100644
+index 84ffa24..0e0d20f 100644
 --- a/src/game/shared/usercmd.cpp
 +++ b/src/game/shared/usercmd.cpp
 @@ -169,6 +169,37 @@ void WriteUsercmd( bf_write *buf, const CUserCmd *to, const CUserCmd *from )
@@ -659,7 +714,7 @@ index 84ffa243..0e0d20f4 100644
  	if ( buf->ReadOneBit() )
  	{
 diff --git a/src/game/shared/usercmd.h b/src/game/shared/usercmd.h
-index 0005bde9..200ea0a6 100644
+index 0005bde..200ea0a 100644
 --- a/src/game/shared/usercmd.h
 +++ b/src/game/shared/usercmd.h
 @@ -56,6 +56,9 @@ public:
@@ -695,7 +750,7 @@ index 0005bde9..200ea0a6 100644
  	bool	hasbeenpredicted;
  
 diff --git a/src/materialsystem/stdshaders/flashlight_ps2x.fxc b/src/materialsystem/stdshaders/flashlight_ps2x.fxc
-index 8ac860cb..6b2ee79c 100644
+index 8ac860c..6b2ee79 100644
 --- a/src/materialsystem/stdshaders/flashlight_ps2x.fxc
 +++ b/src/materialsystem/stdshaders/flashlight_ps2x.fxc
 @@ -69,9 +69,9 @@ struct PS_INPUT
@@ -731,7 +786,7 @@ index 8ac860cb..6b2ee79c 100644
  	baseColor.xyz = vBase.xyz;
  #endif
 diff --git a/src/materialsystem/stdshaders/lightmappedgeneric_flashlight_vs20.fxc b/src/materialsystem/stdshaders/lightmappedgeneric_flashlight_vs20.fxc
-index 7d23bb95..c1e15377 100644
+index 7d23bb9..c1e1537 100644
 --- a/src/materialsystem/stdshaders/lightmappedgeneric_flashlight_vs20.fxc
 +++ b/src/materialsystem/stdshaders/lightmappedgeneric_flashlight_vs20.fxc
 @@ -63,9 +63,9 @@ struct VS_OUTPUT
@@ -767,7 +822,7 @@ index 7d23bb95..c1e15377 100644
  
  	//float3 delta = worldPosToLightVector;
 diff --git a/src/public/const.h b/src/public/const.h
-index 84f28527..9beeb1c5 100644
+index 84f2852..9beeb1c 100644
 --- a/src/public/const.h
 +++ b/src/public/const.h
 @@ -107,7 +107,8 @@

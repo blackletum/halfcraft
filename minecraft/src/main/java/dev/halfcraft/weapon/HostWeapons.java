@@ -57,6 +57,12 @@ public final class HostWeapons {
 		ServerTickEvents.END_SERVER_TICK.register(HostWeapons::serverTick);
 	}
 
+	/** A stand-in for the weapon with that WeaponId; empty for an id no weapon has. */
+	public static ItemStack standIn(int weapon) {
+		WeaponItem item = ITEMS.get(weapon);
+		return item == null ? ItemStack.EMPTY : new ItemStack(item);
+	}
+
 	public static boolean isStandIn(ItemStack stack) {
 		return stack.getItem() instanceof WeaponItem;
 	}

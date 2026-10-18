@@ -24,74 +24,76 @@ namespace halfcraft
 	{
 		constexpr int SDL_NONE = 0;
 		constexpr int WHEEL_NOTCH = 120;
+	}
 
-		/// source key -> SDL scancode (usb hid usage, what minecraft 26.x reads).
-		int sdl_scancode(ButtonCode_t code)
-		{
-			if (code >= KEY_A && code <= KEY_Z) {
-				return 4 + (code - KEY_A);
-			}
-			if (code >= KEY_1 && code <= KEY_9) {
-				return 30 + (code - KEY_1);
-			}
-			if (code >= KEY_PAD_1 && code <= KEY_PAD_9) {
-				return 89 + (code - KEY_PAD_1);
-			}
-			if (code >= KEY_F1 && code <= KEY_F12) {
-				return 58 + (code - KEY_F1);
-			}
-			switch (code) {
-			case KEY_0: return 39;
-			case KEY_PAD_0: return 98;
-			case KEY_PAD_DIVIDE: return 84;
-			case KEY_PAD_MULTIPLY: return 85;
-			case KEY_PAD_MINUS: return 86;
-			case KEY_PAD_PLUS: return 87;
-			case KEY_PAD_ENTER: return 88;
-			case KEY_PAD_DECIMAL: return 99;
-			case KEY_LBRACKET: return 47;
-			case KEY_RBRACKET: return 48;
-			case KEY_SEMICOLON: return 51;
-			case KEY_APOSTROPHE: return 52;
-			case KEY_BACKQUOTE: return 53;
-			case KEY_COMMA: return 54;
-			case KEY_PERIOD: return 55;
-			case KEY_SLASH: return 56;
-			case KEY_BACKSLASH: return 49;
-			case KEY_MINUS: return 45;
-			case KEY_EQUAL: return 46;
-			case KEY_ENTER: return 40;
-			case KEY_SPACE: return 44;
-			case KEY_BACKSPACE: return 42;
-			case KEY_TAB: return 43;
-			case KEY_CAPSLOCK: return 57;
-			case KEY_NUMLOCK: return 83;
-			case KEY_ESCAPE: return 41;
-			case KEY_SCROLLLOCK: return 71;
-			case KEY_INSERT: return 73;
-			case KEY_DELETE: return 76;
-			case KEY_HOME: return 74;
-			case KEY_END: return 77;
-			case KEY_PAGEUP: return 75;
-			case KEY_PAGEDOWN: return 78;
-			case KEY_BREAK: return 72;
-			case KEY_LSHIFT: return 225;
-			case KEY_RSHIFT: return 229;
-			case KEY_LALT: return 226;
-			case KEY_RALT: return 230;
-			case KEY_LCONTROL: return 224;
-			case KEY_RCONTROL: return 228;
-			case KEY_LWIN: return 227;
-			case KEY_RWIN: return 231;
-			case KEY_APP: return 101;
-			case KEY_UP: return 82;
-			case KEY_LEFT: return 80;
-			case KEY_DOWN: return 81;
-			case KEY_RIGHT: return 79;
-			default: return SDL_NONE;
-			}
+	int sdl_scancode(ButtonCode_t code)
+	{
+		if (code >= KEY_A && code <= KEY_Z) {
+			return 4 + (code - KEY_A);
 		}
+		if (code >= KEY_1 && code <= KEY_9) {
+			return 30 + (code - KEY_1);
+		}
+		if (code >= KEY_PAD_1 && code <= KEY_PAD_9) {
+			return 89 + (code - KEY_PAD_1);
+		}
+		if (code >= KEY_F1 && code <= KEY_F12) {
+			return 58 + (code - KEY_F1);
+		}
+		switch (code) {
+		case KEY_0: return 39;
+		case KEY_PAD_0: return 98;
+		case KEY_PAD_DIVIDE: return 84;
+		case KEY_PAD_MULTIPLY: return 85;
+		case KEY_PAD_MINUS: return 86;
+		case KEY_PAD_PLUS: return 87;
+		case KEY_PAD_ENTER: return 88;
+		case KEY_PAD_DECIMAL: return 99;
+		case KEY_LBRACKET: return 47;
+		case KEY_RBRACKET: return 48;
+		case KEY_SEMICOLON: return 51;
+		case KEY_APOSTROPHE: return 52;
+		case KEY_BACKQUOTE: return 53;
+		case KEY_COMMA: return 54;
+		case KEY_PERIOD: return 55;
+		case KEY_SLASH: return 56;
+		case KEY_BACKSLASH: return 49;
+		case KEY_MINUS: return 45;
+		case KEY_EQUAL: return 46;
+		case KEY_ENTER: return 40;
+		case KEY_SPACE: return 44;
+		case KEY_BACKSPACE: return 42;
+		case KEY_TAB: return 43;
+		case KEY_CAPSLOCK: return 57;
+		case KEY_NUMLOCK: return 83;
+		case KEY_ESCAPE: return 41;
+		case KEY_SCROLLLOCK: return 71;
+		case KEY_INSERT: return 73;
+		case KEY_DELETE: return 76;
+		case KEY_HOME: return 74;
+		case KEY_END: return 77;
+		case KEY_PAGEUP: return 75;
+		case KEY_PAGEDOWN: return 78;
+		case KEY_BREAK: return 72;
+		case KEY_LSHIFT: return 225;
+		case KEY_RSHIFT: return 229;
+		case KEY_LALT: return 226;
+		case KEY_RALT: return 230;
+		case KEY_LCONTROL: return 224;
+		case KEY_RCONTROL: return 228;
+		case KEY_LWIN: return 227;
+		case KEY_RWIN: return 231;
+		case KEY_APP: return 101;
+		case KEY_UP: return 82;
+		case KEY_LEFT: return 80;
+		case KEY_DOWN: return 81;
+		case KEY_RIGHT: return 79;
+		default: return SDL_NONE;
+		}
+	}
 
+	namespace
+	{
 		/// source mouse button -> SDL button (1 left, 2 middle, 3 right, 4 x1, 5 x2).
 		int sdl_button(ButtonCode_t code)
 		{

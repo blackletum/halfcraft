@@ -10,7 +10,7 @@ public final class Proto {
 
 	// a hash of the layout below but its comments: the host writes it into the header, and Minecraft links only
 	// with a host built from the same schema
-	public static final int LAYOUT = 0x0E992381;
+	public static final int LAYOUT = 0x2F2E654F;
 
 	// ---- where each part of the mapping is
 	public static final long OFF_HEADER = 0x00;
@@ -285,6 +285,13 @@ public final class Proto {
 	//   Minecraft saves it as its own screenshot and deletes the file
 	//   "fail <request> <reason>": the host had no frame to give (loading, ...)
 	public static final int STR_SCREENSHOT = 2;
+	// (#26) the host's key hint for Minecraft to show as a toast, "" when it goes away. "%<command>%"
+	// is a key Minecraft names from its own binding of that host command (%+jump%, %+attack%, ...),
+	// "%sc:<n>%" a key by its SDL scancode, "%=<name>%" a key the host named itself
+	public static final int STR_HINT = 3;
+	// (#26) something the host's player picked up, for Minecraft to show as a toast: "weapon <WeaponId>",
+	// "ammo <host ammo type> <count>" or "item <host classname>"
+	public static final int STR_PICKUP = 4;
 	// 6: kept for the puppet group (A), 8 for the world group (C)
 
 	// HealKind

@@ -9,7 +9,7 @@ namespace halfcraft::proto
 {
 	// a hash of the layout below but its comments: the host writes it into the header, and Minecraft links only
 	// with a host built from the same schema
-	inline constexpr std::uint32_t kLayout = 0x0E992381;
+	inline constexpr std::uint32_t kLayout = 0x2F2E654F;
 
 	// ---- where each part of the mapping is ----------------------------------------------------------
 	inline constexpr std::uint64_t kOffHeader = 0x00;
@@ -297,6 +297,13 @@ namespace halfcraft::proto
 		//   Minecraft saves it as its own screenshot and deletes the file
 		//   "fail <request> <reason>": the host had no frame to give (loading, ...)
 		kStrScreenshot = 2,
+		// (#26) the host's key hint for Minecraft to show as a toast, "" when it goes away. "%<command>%"
+		// is a key Minecraft names from its own binding of that host command (%+jump%, %+attack%, ...),
+		// "%sc:<n>%" a key by its SDL scancode, "%=<name>%" a key the host named itself
+		kStrHint = 3,
+		// (#26) something the host's player picked up, for Minecraft to show as a toast: "weapon <WeaponId>",
+		// "ammo <host ammo type> <count>" or "item <host classname>"
+		kStrPickup = 4,
 		// 6: kept for the puppet group (A), 8 for the world group (C)
 	};
 
