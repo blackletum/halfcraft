@@ -2,11 +2,11 @@ HalfCraft ships this copy of Minecraft's launcher setup so Half-Life 2 can start
 HalfCraft doesn't include Minecraft: Prism Launcher downloads it after you sign in with a
 Microsoft account that owns Minecraft: Java Edition.
 
-Prism Launcher {PRISM_VERSION} (this folder, the unmodified portable Windows build)
+Prism Launcher 11.1.1 (this folder, the unmodified portable Windows build)
   License: GNU General Public License v3.0 (LICENSE-PrismLauncher.txt)
-  Source:  https://github.com/PrismLauncher/PrismLauncher/tree/{PRISM_VERSION}
+  Source:  https://github.com/PrismLauncher/PrismLauncher/tree/11.1.1
 
-Fabric API {FABRIC_API_VERSION} (instances/HalfCraft/.minecraft/mods/fabric-api.jar)
+Fabric API 0.161.0+26.3 (instances/HalfCraft/.minecraft/mods/fabric-api.jar)
   License: Apache License 2.0
   Source:  https://github.com/FabricMC/fabric
 
